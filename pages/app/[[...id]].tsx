@@ -1,13 +1,32 @@
-import React, { FC, useState } from 'react'
-import { Pane, Dialog, majorScale } from 'evergreen-ui'
-import { useRouter } from 'next/router'
-import Logo from '../../components/logo'
-import FolderList from '../../components/folderList'
-import NewFolderButton from '../../components/newFolderButton'
-import User from '../../components/user'
-import FolderPane from '../../components/folderPane'
-import DocPane from '../../components/docPane'
-import NewFolderDialog from '../../components/newFolderDialog'
+import React, { FC, useState } from 'react';
+import { Pane, Dialog, majorScale } from 'evergreen-ui';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/client';
+import Logo from '../../components/logo';
+import FolderList from '../../components/folderList';
+import NewFolderButton from '../../components/newFolderButton';
+import User from '../../components/user';
+import FolderPane from '../../components/folderPane';
+import DocPane from '../../components/docPane';
+import NewFolderDialog from '../../components/newFolderDialog';
+
+type PropsPage = {
+  activeDoc: any;
+  activeFolder: any;
+  activeDocs: any[];
+};
+
+const Page = ({ activeDoc, activeFolder, activeDocs }: PropsPage) => {
+  if (activeDoc) {
+    return <DocPane folder={activeFolder} doc={activeDoc} />;
+  }
+
+  if (activeFolder) {
+    return <FolderPane folder={activeFolder} docs={activeDocs} />;
+  }
+
+  return null;
+};
 
 const App: FC<{ folders?: any[]; activeFolder?: any; activeDoc?: any; activeDocs?: any[] }> = ({
   folders,
@@ -15,22 +34,13 @@ const App: FC<{ folders?: any[]; activeFolder?: any; activeDoc?: any; activeDocs
   activeFolder,
   activeDocs,
 }) => {
-  const router = useRouter()
-  const [newFolderIsShown, setIsShown] = useState(false)
+  const router = useRouter();
 
-  const Page = () => {
-    if (activeDoc) {
-      return <DocPane folder={activeFolder} doc={activeDoc} />
-    }
+  const [newFolderIsShown, setNewFolderIsShown] = useState(false);
 
-    if (activeFolder) {
-      return <FolderPane folder={activeFolder} docs={activeDocs} />
-    }
+  const [session, loading] = useSession();
 
-    return null
-  }
-
-  if (false) {
+  if (!session && !loading) {
     return (
       <Dialog
         isShown
@@ -44,7 +54,7 @@ const App: FC<{ folders?: any[]; activeFolder?: any; activeDoc?: any; activeDocs
       >
         Sign in to continue
       </Dialog>
-    )
+    );
   }
 
   return (
@@ -53,24 +63,24 @@ const App: FC<{ folders?: any[]; activeFolder?: any; activeDoc?: any; activeDocs
         <Pane padding={majorScale(2)} display="flex" alignItems="center" justifyContent="space-between">
           <Logo />
 
-          <NewFolderButton onClick={() => setIsShown(true)} />
+          <NewFolderButton onClick={() => setNewFolderIsShown(true)} />
         </Pane>
         <Pane>
-          <FolderList folders={folders} />{' '}
+          <FolderList folders={[{ _id: 1, name: 'test' }]} />{' '}
         </Pane>
       </Pane>
       <Pane marginLeft={300} width="calc(100vw - 300px)" height="100vh" overflowY="auto" position="relative">
-        <User user={{}} />
-        <Page />
+        <User user={session.user} />
+        <Page activeDoc={activeDoc} activeFolder={activeFolder} activeDocs={activeDocs} />
       </Pane>
-      <NewFolderDialog close={() => setIsShown(false)} isShown={newFolderIsShown} onNewFolder={() => {}} />
+      <NewFolderDialog close={() => setNewFolderIsShown(false)} isShown={newFolderIsShown} onNewFolder={() => {}} />
     </Pane>
-  )
-}
+  );
+};
 
 App.defaultProps = {
   folders: [],
-}
+};
 
 /**
  * Catch all handler. Must handle all different page
@@ -83,4 +93,4 @@ App.defaultProps = {
  *
  * @param context
  */
-export default App
+export default App;
