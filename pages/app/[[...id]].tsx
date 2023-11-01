@@ -40,6 +40,10 @@ const App: FC<{ folders?: any[]; activeFolder?: any; activeDoc?: any; activeDocs
 
   const [session, loading] = useSession();
 
+  if (loading) {
+    return null;
+  }
+
   if (!session && !loading) {
     return (
       <Dialog
