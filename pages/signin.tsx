@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { signIn, useSession } from "next-auth/client";
-import { useRouter } from "next/router";
-import { Pane, majorScale, Text } from "evergreen-ui";
-import Logo from "../components/logo";
+import { useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/client';
+import { useRouter } from 'next/router';
+import { Pane, majorScale, Text } from 'evergreen-ui';
+import Logo from '../components/logo';
 
-import SocialButton from "../components/socialButton";
+import SocialButton from '../components/socialButton';
 
 const Signin = () => {
   const [session] = useSession();
@@ -13,8 +13,7 @@ const Signin = () => {
 
   useEffect(() => {
     if (session) {
-      console.log("session => ", session);
-      router.push("/app");
+      router.push('/app');
     }
   }, [router, session]);
 
@@ -50,7 +49,7 @@ const Signin = () => {
         paddingX={majorScale(7)}
       >
         <Pane width="100%" textAlign="center">
-          <SocialButton type="github" onClick={() => signIn("github")} />
+          <SocialButton type="github" onClick={() => signIn('github')} />
         </Pane>
       </Pane>
     </Pane>

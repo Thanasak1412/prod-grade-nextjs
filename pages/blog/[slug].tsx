@@ -1,17 +1,17 @@
-import React, { FC } from "react";
-import hydrate from "next-mdx-remote/hydrate";
-import { majorScale, Pane, Heading, Spinner } from "evergreen-ui";
-import renderToString from "next-mdx-remote/render-to-string";
-import matter from "gray-matter";
-import fs from "fs";
-import path from "path";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { Post } from "../../types";
-import Container from "../../components/container";
-import HomeNav from "../../components/homeNav";
-import { getDir } from "../../utils/path";
-import { posts } from "../../content";
+import React, { FC } from 'react';
+import hydrate from 'next-mdx-remote/hydrate';
+import { majorScale, Pane, Heading, Spinner } from 'evergreen-ui';
+import renderToString from 'next-mdx-remote/render-to-string';
+import matter from 'gray-matter';
+import fs from 'fs';
+import path from 'path';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { Post } from '../../types';
+import Container from '../../components/container';
+import HomeNav from '../../components/homeNav';
+import { getDir } from '../../utils/path';
+import { posts } from '../../content';
 
 const BlogPost: FC<Post> = ({ source, frontMatter }) => {
   const content = hydrate(source);
@@ -35,11 +35,7 @@ const BlogPost: FC<Post> = ({ source, frontMatter }) => {
       </header>
       <main>
         <Container>
-          <Heading
-            fontSize="clamp(2rem, 8vw, 6rem)"
-            lineHeight="clamp(2rem, 8vw, 6rem)"
-            marginY={majorScale(3)}
-          >
+          <Heading fontSize="clamp(2rem, 8vw, 6rem)" lineHeight="clamp(2rem, 8vw, 6rem)" marginY={majorScale(3)}>
             {frontMatter.title}
           </Heading>
           <Pane>{content}</Pane>
@@ -50,17 +46,17 @@ const BlogPost: FC<Post> = ({ source, frontMatter }) => {
 };
 
 BlogPost.defaultProps = {
-  source: "",
-  frontMatter: { title: "default title", summary: "summary", publishedOn: "" },
+  source: '',
+  frontMatter: { title: 'default title', summary: 'summary', publishedOn: '' },
 };
 
 export function getStaticPaths() {
-  const { filename, pathDir } = getDir("posts");
+  const { filename, pathDir } = getDir('posts');
 
   const slugs = filename.map((name) => {
     const filePath = path.join(pathDir, name);
 
-    const file = fs.readFileSync(filePath, "utf-8");
+    const file = fs.readFileSync(filePath, 'utf-8');
 
     return matter(file).data;
   });
@@ -81,8 +77,8 @@ type Params = {
 export async function getStaticProps({ params, preview }: Params) {
   let postFile;
   try {
-    const postPath = path.join(process.cwd(), "posts", `${params.slug}.mdx`);
-    postFile = fs.readFileSync(postPath, "utf-8");
+    const postPath = path.join(process.cwd(), 'posts', `${params.slug}.mdx`);
+    postFile = fs.readFileSync(postPath, 'utf-8');
   } catch {
     // must be from cms or its a 404
     const cmsPosts = (preview ? posts.draft : posts.published).map((post) => ({
@@ -94,7 +90,7 @@ export async function getStaticProps({ params, preview }: Params) {
   }
 
   if (!postFile) {
-    throw new Error("no post");
+    throw new Error('no post');
   }
 
   const { content, data } = matter(postFile);
