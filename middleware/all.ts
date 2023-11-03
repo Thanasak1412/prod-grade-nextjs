@@ -1,8 +1,16 @@
-import nc from 'next-connect'
-import db from './db'
-import auth from './auth'
+import nc from 'next-connect';
+import cors from 'cors';
 
-const middleware = nc()
+import db from './db';
+import auth from './auth';
 
-middleware.use(db).use(auth)
-export default middleware
+const middleware = nc();
+
+const corsOptions = {
+  origin: process.env.NEXT_PUBLIC_API_HOST,
+  method: 'PUT, POST, OPTIONS',
+};
+
+middleware.use(cors(corsOptions)).use(db).use(auth);
+
+export default middleware;

@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-export default async function database(req, res, next) {
+export default async function database(req, _res, next) {
   const { db, dbClient } = await connectToDB();
 
   req.db = db;
